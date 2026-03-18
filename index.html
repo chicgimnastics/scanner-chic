@@ -7,7 +7,7 @@
 
 <body>
 
-<h2>Escanear Zapatillas CHIC 2026 V8</h2>
+<h2>Escanear Zapatillas CHIC 2026 V9</h2>
 
 <video id="video" width="300"></video>
 
@@ -52,15 +52,12 @@ async function startScanner() {
             let talle = talles[codigo]
 
             fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    codigo: codigo,
-                    talle: talle
-                })
-            })
+    method: "POST",
+    body: JSON.stringify({
+        codigo: codigo,
+        talle: talle
+    })
+})
 
             alert("Talle: " + talle)
 
