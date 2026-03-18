@@ -7,7 +7,7 @@
 
 <body>
 
-<h2>Escanear Zapatillas CHIC 2026 V6</h2>
+<h2>Escanear Zapatillas CHIC 2026 V7</h2>
 
 <video id="video" width="300"></video>
 
@@ -19,6 +19,16 @@ const video = document.getElementById('video')
 let controls
 let scanning = true
 
+// 🧠 MAPEO DE CODIGOS A TALLES
+const talles = {
+    "X004T1DV03": "33",
+    "X004T1DUXV": "34",
+    "X004T16PAB": "35",
+    "X004T1078R": "36",
+    "X004T18ZNB": "37",
+    "X004T19XPP": "38"
+}
+
 async function startScanner() {
 
     controls = await codeReader.decodeFromVideoDevice(null, video, (result, err) => {
@@ -27,19 +37,21 @@ async function startScanner() {
 
             scanning = false
 
-            // 🛑 detener cámara correctamente
             if (controls) controls.stop()
+
+            let codigo = result.text
+            let talle = talles[codigo] || "DESCONOCIDO"
 
             fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
                 method: "POST",
                 body: JSON.stringify({
-                    codigo: result.text
+                    codigo: codigo,
+                    talle: talle
                 })
             })
 
-            alert("Escaneado: " + result.text)
+            alert("Talle: " + talle)
 
-            // 🔁 reiniciar limpio
             setTimeout(() => {
                 scanning = true
                 startScanner()
@@ -48,7 +60,6 @@ async function startScanner() {
     })
 }
 
-// 🚀 iniciar
 startScanner()
 
 </script>
