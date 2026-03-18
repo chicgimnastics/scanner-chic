@@ -7,7 +7,9 @@
 
 <body>
 
-<h2>Escanear Zapatillas CHIC 2026 V11</h2>
+<h2>Escanear Zapatillas CHIC 2026 V12</h2>
+
+<p id="status">📷 Listo para escanear...</p>
 
 <video id="video" width="300"></video>
 
@@ -16,11 +18,10 @@
 const codeReader = new ZXing.BrowserBarcodeReader()
 const video = document.getElementById('video')
 
-let controls
 let scanning = true
 let lastCode = null
 
-// 🧠 MAPEO
+// 🧠 MAPEO TALLES
 const talles = {
     "X004T1DV03": "33",
     "X004T1DUXV": "34",
@@ -32,43 +33,44 @@ const talles = {
 
 async function startScanner() {
 
-    ccontrols = await codeReader.decodeFromVideoDevice(null, video, async (result, err) => {
+    await codeReader.decodeFromVideoDevice(null, video, async (result, err) => {
 
         if (result && scanning) {
 
             let codigo = result.text.trim()
 
-            // 🚫 ignorar lecturas inválidas
+            // 🚫 ignorar códigos que no son tuyos
             if (!talles[codigo]) return
 
-            // 🚫 evitar repetir el mismo código seguido
+            // 🚫 evitar duplicados seguidos
             if (codigo === lastCode) return
 
             lastCode = codigo
             scanning = false
 
-            if (controls) controls.stop()
-
             let talle = talles[codigo]
 
-           await fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
-    method: "POST",
-    body: new URLSearchParams({
-        codigo: codigo,
-        talle: talle
-    })
-})
+            // 📡 enviar a Google Sheets
+            await fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
+                method: "POST",
+                body: new URLSearchParams({
+                    codigo: codigo,
+                    talle: talle
+                })
+            })
 
-document.body.insertAdjacentHTML("beforeend", `<p>✅ Talle ${talle} registrado</p>`)
+            // ✅ feedback visual (sin bloquear)
+            document.getElementById("status").innerText = "✅ Talle " + talle + " registrado"
 
+            // ⏱️ volver a habilitar escaneo rápido
             setTimeout(() => {
                 scanning = true
-                startScanner()
-            }, 800)
+            }, 400)
         }
     })
 }
 
+// 🚀 iniciar
 startScanner()
 
 </script>
