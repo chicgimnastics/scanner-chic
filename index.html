@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://unpkg.com/@zxing/library@latest"></script>
+</head>
+
+<body>
+
+<h2>Escanear Zapatillas CHIC</h2>
+
+<video id="video" width="300"></video>
+
+<script>
+
+const codeReader = new ZXing.BrowserBarcodeReader()
+const video = document.getElementById('video')
+
+codeReader.decodeFromVideoDevice(null, video, (result, err) => {
+    if (result) {
+
+        fetch("TU_URL_DE_APPS_SCRIPT", {
+            method: "POST",
+            body: JSON.stringify({
+                codigo: result.text
+            })
+        })
+
+        alert("Escaneado: " + result.text)
+    }
+})
+
+</script>
+
+</body>
+</html>
