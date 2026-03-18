@@ -7,7 +7,7 @@
 
 <body>
 
-<h2>Escanear Zapatillas CHIC 2026 V10</h2>
+<h2>Escanear Zapatillas CHIC 2026 V11</h2>
 
 <video id="video" width="300"></video>
 
@@ -32,7 +32,7 @@ const talles = {
 
 async function startScanner() {
 
-    controls = await codeReader.decodeFromVideoDevice(null, video, (result, err) => {
+    ccontrols = await codeReader.decodeFromVideoDevice(null, video, async (result, err) => {
 
         if (result && scanning) {
 
@@ -51,7 +51,7 @@ async function startScanner() {
 
             let talle = talles[codigo]
 
-            fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
+           await fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
     method: "POST",
     body: new URLSearchParams({
         codigo: codigo,
@@ -59,7 +59,7 @@ async function startScanner() {
     })
 })
 
-            alert("Talle: " + talle)
+document.body.insertAdjacentHTML("beforeend", `<p>✅ Talle ${talle} registrado</p>`)
 
             setTimeout(() => {
                 scanning = true
