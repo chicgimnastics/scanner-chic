@@ -7,7 +7,7 @@
 
 <body>
 
-<h2>Escanear Zapatillas CHIC 2026 V7</h2>
+<h2>Escanear Zapatillas CHIC 2026 V8</h2>
 
 <video id="video" width="300"></video>
 
@@ -18,8 +18,9 @@ const video = document.getElementById('video')
 
 let controls
 let scanning = true
+let lastCode = null
 
-// 🧠 MAPEO DE CODIGOS A TALLES
+// 🧠 MAPEO
 const talles = {
     "X004T1DV03": "33",
     "X004T1DUXV": "34",
@@ -35,15 +36,26 @@ async function startScanner() {
 
         if (result && scanning) {
 
+            let codigo = result.text.trim()
+
+            // 🚫 ignorar lecturas inválidas
+            if (!talles[codigo]) return
+
+            // 🚫 evitar repetir el mismo código seguido
+            if (codigo === lastCode) return
+
+            lastCode = codigo
             scanning = false
 
             if (controls) controls.stop()
 
-            let codigo = result.text
-            let talle = talles[codigo] || "DESCONOCIDO"
+            let talle = talles[codigo]
 
             fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({
                     codigo: codigo,
                     talle: talle
