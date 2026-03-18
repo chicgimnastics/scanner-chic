@@ -7,7 +7,7 @@
 
 <body>
 
-<h2>Escanear Zapatillas CHIC 2026 V4</h2>
+<h2>Escanear Zapatillas CHIC 2026 V5</h2>
 
 <video id="video" width="300"></video>
 
@@ -16,29 +16,37 @@
 const codeReader = new ZXing.BrowserBarcodeReader()
 const video = document.getElementById('video')
 
-let scanning = true
+let controls = null
 
-codeReader.decodeFromVideoDevice(null, video, (result, err) => {
+function startScanner() {
+    codeReader.decodeFromVideoDevice(null, video, (result, err, ctrl) => {
 
-    if (result && scanning) {
+        if (!controls) controls = ctrl
 
-        scanning = false // 🚫 evita múltiples escaneos
+        if (result) {
 
-        fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
-            method: "POST",
-            body: JSON.stringify({
-                codigo: result.text
+            // 🛑 detener cámara COMPLETAMENTE
+            controls.stop()
+
+            fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
+                method: "POST",
+                body: JSON.stringify({
+                    codigo: result.text
+                })
             })
-        })
 
-        alert("Escaneado: " + result.text)
+            alert("Escaneado: " + result.text)
 
-        // ⏱️ espera 2 segundos antes de volver a escanear
-        setTimeout(() => {
-            scanning = true
-        }, 2000)
-    }
-})
+            // 🔁 reiniciar scanner después del OK
+            setTimeout(() => {
+                startScanner()
+            }, 500)
+        }
+    })
+}
+
+// 🚀 iniciar
+startScanner()
 
 </script>
 
