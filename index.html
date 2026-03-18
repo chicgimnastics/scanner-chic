@@ -1,3 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://unpkg.com/@zxing/library@latest"></script>
+</head>
+
+<body>
+
+<h2>Escanear Zapatillas CHIC 2026 V4</h2>
+
+<video id="video" width="300"></video>
+
 <script>
 
 const codeReader = new ZXing.BrowserBarcodeReader()
@@ -28,3 +41,6 @@ codeReader.decodeFromVideoDevice(null, video, (result, err) => {
 })
 
 </script>
+
+</body>
+</html>
