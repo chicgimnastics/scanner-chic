@@ -1,23 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="https://unpkg.com/@zxing/library@latest"></script>
-</head>
-
-<body>
-
-<h2>Escanear Zapatillas CHIC 2026</h2>
-
-<video id="video" width="300"></video>
-
 <script>
 
 const codeReader = new ZXing.BrowserBarcodeReader()
 const video = document.getElementById('video')
 
+let scanning = true
+
 codeReader.decodeFromVideoDevice(null, video, (result, err) => {
-    if (result) {
+
+    if (result && scanning) {
+
+        scanning = false // 🚫 evita múltiples escaneos
 
         fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
             method: "POST",
@@ -27,10 +19,12 @@ codeReader.decodeFromVideoDevice(null, video, (result, err) => {
         })
 
         alert("Escaneado: " + result.text)
+
+        // ⏱️ espera 2 segundos antes de volver a escanear
+        setTimeout(() => {
+            scanning = true
+        }, 2000)
     }
 })
 
 </script>
-
-</body>
-</html>
