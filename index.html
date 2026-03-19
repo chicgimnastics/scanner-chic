@@ -7,7 +7,7 @@
 
 <body>
 
-<h2>Escanear Zapatillas CHIC 2026 V12</h2>
+<h2>Escanear Zapatillas CHIC 2026 V13</h2>
 
 <p id="status">📷 Listo para escanear...</p>
 
@@ -51,7 +51,7 @@ async function startScanner() {
             let talle = talles[codigo]
 
             // 📡 enviar a Google Sheets
-            await fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbw3dCSrOSm2Tle84Kn7Jdb-X1T09y9xAgSV41Ro07pvbwK-M0ScGSsIusBx5tzaWFN2/exec", {
                 method: "POST",
                 body: new URLSearchParams({
                     codigo: codigo,
@@ -65,7 +65,7 @@ async function startScanner() {
             // ⏱️ volver a habilitar escaneo rápido
             setTimeout(() => {
                 scanning = true
-            }, 400)
+            }, 200)
         }
     })
 }
